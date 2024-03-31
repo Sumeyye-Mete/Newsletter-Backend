@@ -32,5 +32,3 @@ Route::group(['prefix' => 'v1'], function () {
     Route::get('articles/{article}', [ArticleController::class, "show"])->name("articles.show");
     Route::post('subscribe', [SubscribeController::class, "store"]);
 });
-
-

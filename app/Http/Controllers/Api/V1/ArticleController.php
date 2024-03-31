@@ -28,13 +28,13 @@ class ArticleController extends Controller
 
         $isCached = Cache::has($cacheKey);
 
-        print_r("cash", $isCached);
-
-        $articles = new ArticleCollection(Article::orderBy('created_at', 'desc')->get());
-        $responseData = ['articles' => $articles, 'isCashed' => $isCached];
-        if (!$isCached) {
+        if ($isCached) {
+            $articles =  Cache::get($cacheKey);
+        } else {
+            $articles = new ArticleCollection(Article::orderBy('created_at', 'desc')->get());
             Cache::put($cacheKey, $articles, now()->addHours(12));
         }
+        $responseData = ['articles' => $articles, 'isCashed' => $isCached];
         return response()->json($responseData, 201);
     }
 
@@ -89,8 +89,9 @@ class ArticleController extends Controller
             'author_id' => auth()->id() ?? 1
         ]);
 
-        //email fields
+
         if ($article) {
+            //email fields
             $mailBody = $request->input('body');
             $mailTitle = $request->input('title');
             $mailId = $article->id ?? 1;
@@ -103,6 +104,8 @@ class ArticleController extends Controller
                 echo $value->email;
                 Mail::to("$value->email")->send(new MyEmail($mailTitle, $mailBody, $mailImage, $mailId));
             }
+            //clear cache
+            Cache::forget("articleCache");
         }
 
         echo "email sended";
@@ -167,6 +170,7 @@ class ArticleController extends Controller
             'image' => $path,
             'author_id' => auth()->id() ?? 1
         ]);
+        Cache::forget("articleCache");
 
         return (new ArticleResource($article))->response()->setStatusCode(200);
     }
@@ -178,6 +182,7 @@ class ArticleController extends Controller
     {
         $this->deleteImage($article);
         $article->delete();
+        Cache::forget("articleCache");
         return response()->json(['message' => 'Resource deleted successfully'], 200);
     }
 

@@ -27,7 +27,7 @@ class DailyEmail extends Mailable
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: 'Daily Email',
+            subject: "Discover What's New on Newsletter",
         );
     }
 

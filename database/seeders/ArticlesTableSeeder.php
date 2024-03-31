@@ -13,6 +13,6 @@ class ArticlesTableSeeder extends Seeder
      */
     public function run(): void
     {
-        Article::factory()->count(10)->create(['author_id'=>1]);
+        Article::factory()->count(20)->create(['author_id' => 1]);
     }
 }

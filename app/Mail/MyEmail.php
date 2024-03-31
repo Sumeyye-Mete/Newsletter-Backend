@@ -27,7 +27,7 @@ class MyEmail extends Mailable
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: 'My Email',
+            subject: 'Stay Updated: Newsletter New Post Alert!',
         );
     }
 
