@@ -1,13 +1,3 @@
-<?php
-// gmail doesnt display local images so all images set as picsum. 
-if ($image === "https://picsum.photos/800/600") {
-  $img = $image;
-} else {
-  $img = "/images/$image";
-}
-
-?>
-
 <!DOCTYPE html>
 <html lang="en">
 
@@ -31,8 +21,6 @@ if ($image === "https://picsum.photos/800/600") {
 
     .container {
       padding: 1.5rem;
-      border-top-width: 1px;
-      border-color: #E5E7EB;
     }
 
     .link:hover {
@@ -49,10 +37,7 @@ if ($image === "https://picsum.photos/800/600") {
     }
 
     .title-container {
-      display: flex;
       padding: 1rem;
-      flex-direction: column;
-      gap: 1.25rem;
       justify-content: space-between;
       line-height: 1.5;
     }
@@ -88,8 +73,14 @@ if ($image === "https://picsum.photos/800/600") {
 </head>
 
 <body>
-  <h1 style="text-align: center;">Checkout new our content...</h1>
+  <h1 style="text-align: center;">Checkout todays news...</h1>
   <div class="container">
+    @foreach ($articles as $key => $value )
+    @php
+    $title= $value["title"];
+    $body = $value["body"];
+    $id = $value["id"];
+    @endphp
     <a href='http://localhost:3000/article/{{$id}}' class="link">
       <img class="image" src="https://picsum.photos/800/600" />
       <div class="title-container">
@@ -99,7 +90,7 @@ if ($image === "https://picsum.photos/800/600") {
         <p>{{$body}}</p>
       </div>
     </a>
-
+    @endforeach
   </div>
 </body>
 

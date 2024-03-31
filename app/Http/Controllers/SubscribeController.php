@@ -9,15 +9,6 @@ use Illuminate\Validation\Rule;
 
 class SubscribeController extends Controller
 {
-    public function index()
-    {
-        $mailbook = Subscribes::all();
-        
-
-        foreach ($mailbook as $key => $value) {
-            echo $value->email;
-        }
-    }
     public function store(Request $request)
     {
         $validator =  Validator::make($request->all(), [
