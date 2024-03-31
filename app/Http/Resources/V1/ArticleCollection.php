@@ -22,7 +22,8 @@ class ArticleCollection extends ResourceCollection
     public function with($request)
     {
         return [
-            'status' => 'success'
+            'status' => 'success',
+            'source' => $request->source
         ];
     }
     public function withResponse(Request $request, $response)

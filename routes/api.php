@@ -3,10 +3,14 @@
 use App\Http\Controllers\Api\V1\ArticleController;
 use App\Http\Controllers\Api\V1\AuthorController;
 use App\Http\Controllers\Api\V1\UserController;
+use App\Http\Controllers\SubscribeController;
 use App\Models\Article;
+use App\Models\Subscribes;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Validator;
+use Illuminate\Validation\Rule;
 
 Route::middleware(['auth:sanctum'])->get('/user', function (Request $request) {
     return $request->user();
@@ -26,4 +30,6 @@ Route::group(['prefix' => 'v1', 'middleware' => 'auth:sanctum'], function () {
 Route::group(['prefix' => 'v1'], function () {
     Route::get('articles', [ArticleController::class, "index"]);
     Route::get('articles/{article}', [ArticleController::class, "show"])->name("articles.show");
+    Route::post('subscribe', [SubscribeController::class, "store"]);
+    Route::get('subscribe', [SubscribeController::class, "index"]);
 });

@@ -1,8 +1,9 @@
 <?php
+// gmail doesnt display local images so all images set as picsum. 
 if ($image === "https://picsum.photos/800/600") {
   $img = $image;
 } else {
-  $img = "http://localhost:8000/images/$image";
+  $img = "/images/$image";
 }
 
 ?>
@@ -65,7 +66,8 @@ if ($image === "https://picsum.photos/800/600") {
       color: #3730A3;
     }
 
-    @media (min-width: 768px) {
+
+    @media screen and (min-width: 768px) {
       .link {
         flex-direction: row;
         gap: 5rem;
@@ -88,7 +90,7 @@ if ($image === "https://picsum.photos/800/600") {
 <body>
   <div class="container">
     <a href='http://localhost:3000/article/{{$id}}' class="link">
-      <img class="image" src="{{$img}}" />
+      <img class="image" src="https://picsum.photos/800/600" />
       <div class="title-container">
         <h5 class="title">
           {{ $title }}

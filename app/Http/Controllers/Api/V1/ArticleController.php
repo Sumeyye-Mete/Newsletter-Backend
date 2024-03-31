@@ -7,7 +7,9 @@ use App\Http\Resources\V1\ArticleCollection;
 use App\Http\Resources\V1\ArticleResource;
 use App\Mail\MyEmail;
 use App\Models\Article;
+use App\Models\Subscribes;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\File as FacadesFile;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Validator;
@@ -22,7 +24,18 @@ class ArticleController extends Controller
      */
     public function index()
     {
-        return new ArticleCollection(Article::orderBy('created_at', 'desc')->get());
+        $cacheKey = 'articleCache';
+
+        $isCached = Cache::has($cacheKey);
+
+        print_r("cash", $isCached);
+
+        $articles = new ArticleCollection(Article::orderBy('created_at', 'desc')->get());
+        $responseData = ['articles' => $articles, 'isCashed' => $isCached];
+        if (!$isCached) {
+            Cache::put($cacheKey, $articles, now()->addHours(12));
+        }
+        return response()->json($responseData, 201);
     }
 
     /**
@@ -67,7 +80,7 @@ class ArticleController extends Controller
             echo "image gelmedi";
             $path = Null;
         }
-
+        //create new article
         $article = Article::create([
             'title' => $request->input('title'),
             'slug' => Str::slug($request->input('title')),
@@ -75,19 +88,25 @@ class ArticleController extends Controller
             'image' => $path,
             'author_id' => auth()->id() ?? 1
         ]);
-        print_r($path);
-        print_r($article->id);
 
+        //email fields
         if ($article) {
             $mailBody = $request->input('body');
             $mailTitle = $request->input('title');
             $mailId = $article->id ?? 1;
-            $mailImage = "http://localhost:8000/images/$path";
-            Mail::to("sumeyyeozsahin93@gmail.com")->send(new MyEmail($mailTitle, $mailBody, $mailImage, $mailId));
+            $mailImage = $path;
+
+            $mailbook = Subscribes::all();
+
+
+            foreach ($mailbook as $key => $value) {
+                echo $value->email;
+                Mail::to("$value->email")->send(new MyEmail($mailTitle, $mailBody, $mailImage, $mailId));
+            }
         }
 
-        echo "email gonderdi";
-        return (new ArticleResource($article))->response()->setStatusCode(201); // degistirdim
+        echo "email sended";
+        return (new ArticleResource($article))->response()->setStatusCode(201);
     }
 
     /**
@@ -170,7 +189,7 @@ class ArticleController extends Controller
         if (FacadesFile::exists($imagePath)) {
             // Delete the image
             FacadesFile::delete($imagePath);
-            echo "Image deleted successfully";
+            echo "Image deleted from database successfully";
         } else {
             echo "Image not found";
         }
