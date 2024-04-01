@@ -6,6 +6,10 @@ Welcome to my web page project, where I've used Laravel backend and Next.js fron
 
 In this project users can  explore a list of news items and view details of each item. Cached data is marked as green frame for news items. Admin user can login and do CRUD operations for news items. Subcribed users can get email notifications when a new news item is published. A summary of all news items added that day is sent as email to subscribed users.
 
+## Project Video Demo:
+
+https://github.com/Sumeyye-Mete/Newsletter-Backend/assets/143296901/01a9a727-eae5-412e-9b4c-452ced24d8d7
+
 
 ## Setting Project 
 
